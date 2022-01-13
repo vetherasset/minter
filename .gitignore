@@ -1,0 +1,24 @@
+__pycache__
+.secret
+.env
+.history
+.hypothesis/
+build/
+reports/
+node_modules
+package-lock.json
+tmp
+node_modules
+.env
+coverage
+coverage.json
+typechain
+
+#Hardhat files
+cache
+artifacts
+.openzeppelin/*.json
+!.openzeppelin/mainnet.json
+secret*
+!secrets.sample.json
+tmp

@@ -1,0 +1,29 @@
+{
+    "name": "upgradeable",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "solhint -f table contracts/**/*.sol"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "@nomiclabs/hardhat-ethers": "^2.0.4",
+        "@nomiclabs/hardhat-etherscan": "^3.0.0",
+        "@openzeppelin/hardhat-upgrades": "^1.13.0",
+        "chai": "^4.3.4",
+        "chai-as-promised": "^7.1.1",
+        "ethers": "^5.5.3",
+        "hardhat": "^2.8.2",
+        "prettier": "^2.5.1",
+        "prettier-plugin-solidity": "^1.0.0-beta.19",
+        "solhint": "^3.3.6"
+    },
+    "dependencies": {
+        "@openzeppelin/contracts": "4.3.2",
+        "@openzeppelin/contracts-upgradeable": "^4.4.2"
+    }
+}
