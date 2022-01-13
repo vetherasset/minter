@@ -6,7 +6,7 @@ const USDV = {
 // address of proxy
 const PROXY = {
     mainnet: "",
-    kovan: "0x02Db56B61614507f07ae0E75981D7D45B0da0ac9",
+    kovan: "0x17c7309d59514A18Fa623fb0371256a976E5DCE7",
 }
 
 module.exports = {

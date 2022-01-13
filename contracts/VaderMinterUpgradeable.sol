@@ -205,11 +205,18 @@ contract VaderMinterUpgradeable is IVaderMinterUpgradeable, OwnableUpgradeable {
      * Requirements:
      * - Only existing owner can call this function.
      **/
-    function setDailyLimits(Limits calldata _dailyLimits) external onlyOwner {
-        require(
-            _dailyLimits.fee <= _MAX_BASIS_POINTS,
-            "VMU::setDailyLimits: Invalid Fee"
-        );
+    function setDailyLimits(
+        uint256 _fee,
+        uint256 _mintLimit,
+        uint256 _burnLimit
+    ) external onlyOwner {
+        require(_fee <= _MAX_BASIS_POINTS, "VMU::setDailyLimits: Invalid Fee");
+
+        Limits memory _dailyLimits = Limits({
+            fee: _fee,
+            mintLimit: _mintLimit,
+            burnLimit: _burnLimit
+        });
 
         emit DailyLimitsChanged(dailyLimits, _dailyLimits);
         dailyLimits = _dailyLimits;
