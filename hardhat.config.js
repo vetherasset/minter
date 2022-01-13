@@ -5,7 +5,15 @@ require("@nomiclabs/hardhat-etherscan")
 const { alchemyApiKey, mnemonic, etherscanApiKey } = require("./secrets.json")
 
 module.exports = {
-    solidity: "0.8.9",
+    solidity: {
+        version: "0.8.9",
+        settings: {
+            optimizer: {
+                enabled: true,
+                runs: 200,
+            },
+        },
+    },
     networks: {
         kovan: {
             url: `https://eth-kovan.alchemyapi.io/v2/${alchemyApiKey}`,

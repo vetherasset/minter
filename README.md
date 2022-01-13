@@ -25,10 +25,13 @@ npx hardhat compile
 npx hardhat run --network kovan scripts/deploy.js
 
 # verify
-npx hardhat verify --network kovan DEPLOYED_CONTRACT_ADDRESS "Constructor argument 1"
+IMP=0xc43ee544522161dce3de9f6d62225221019d28c8
+USDV=0x0de905dfb036521f5A45Da90B2D9e8a74a9CE42E
 
-# upgrade
-npx hardhat run --network kovan scripts/test/upgrade.js
+npx hardhat verify --network kovan $IMP "$USDV"
+
+# flatten
+npx hardhat flatten contracts/VaderMinterUpgradeable.sol > tmp/flat.sol
 ```
 
 ### Mainnet
@@ -38,5 +41,5 @@ npx hardhat run --network kovan scripts/test/upgrade.js
 
 ### Kovan
 
--   ProxyAdmin
--   Proxy
+-   ProxyAdmin 0x20e9e0F4249bc965aCf15FF99DC64F73f31fe610
+-   Proxy 0x02Db56B61614507f07ae0E75981D7D45B0da0ac9
