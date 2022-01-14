@@ -93,7 +93,13 @@ contract VaderMinterUpgradeable is IVaderMinterUpgradeable, OwnableUpgradeable {
             "VMU::mint: 24 Hour Limit Reached"
         );
 
-        usdv.mint(msg.sender, vAmount, uAmount, getPublicFee());
+        usdv.mint(
+            msg.sender,
+            vAmount,
+            uAmount,
+            getPublicFee(),
+            lbt.maxUpdateWindow()
+        );
         return uAmount;
     }
 
@@ -129,7 +135,13 @@ contract VaderMinterUpgradeable is IVaderMinterUpgradeable, OwnableUpgradeable {
             "VMU::mint: 24 Hour Limit Reached"
         );
 
-        usdv.burn(msg.sender, uAmount, vAmount, getPublicFee());
+        usdv.burn(
+            msg.sender,
+            uAmount,
+            vAmount,
+            getPublicFee(),
+            lbt.maxUpdateWindow()
+        );
         return vAmount;
     }
 
@@ -163,7 +175,13 @@ contract VaderMinterUpgradeable is IVaderMinterUpgradeable, OwnableUpgradeable {
             _partnerLimits.mintLimit -= uAmount;
         }
 
-        usdv.mint(msg.sender, vAmount, uAmount, _partnerLimits.fee);
+        usdv.mint(
+            msg.sender,
+            vAmount,
+            uAmount,
+            _partnerLimits.fee,
+            lbt.maxUpdateWindow()
+        );
         return uAmount;
     }
 
@@ -195,7 +213,13 @@ contract VaderMinterUpgradeable is IVaderMinterUpgradeable, OwnableUpgradeable {
             _partnerLimits.burnLimit -= vAmount;
         }
 
-        usdv.burn(msg.sender, uAmount, vAmount, _partnerLimits.fee);
+        usdv.burn(
+            msg.sender,
+            uAmount,
+            vAmount,
+            _partnerLimits.fee,
+            lbt.maxUpdateWindow()
+        );
         return vAmount;
     }
 
@@ -204,6 +228,9 @@ contract VaderMinterUpgradeable is IVaderMinterUpgradeable, OwnableUpgradeable {
      *
      * Requirements:
      * - Only existing owner can call this function.
+     * - Param {_fee} fee can not be bigger than _MAX_BASIS_POINTS.
+     * - Param {_mintLimit} mint limit can be 0.
+     * - Param {_burnLimit} burn limit can be 0.
      **/
     function setDailyLimits(
         uint256 _fee,
@@ -229,25 +256,27 @@ contract VaderMinterUpgradeable is IVaderMinterUpgradeable, OwnableUpgradeable {
      * Requirements:
      * - Only existing owner can call this function.
      * - Param {_partner} cannot be a zero address.
-     * - Param {_limits} mint/burn limits can not be 0.
-     * - Param {_limits} fee can not be bigger than _MAX_BASIS_POINTS.
+     * - Param {_fee} fee can not be bigger than _MAX_BASIS_POINTS.
+     * - Param {_mintLimit} mint limits can be 0.
+     * - Param {_burnLimit} burn limits can be 0.
      **/
-    function whitelistPartner(address _partner, Limits calldata _limits)
-        external
-        onlyOwner
-    {
+    function whitelistPartner(
+        address _partner,
+        uint256 _fee,
+        uint256 _mintLimit,
+        uint256 _burnLimit
+    ) external onlyOwner {
         require(_partner != address(0), "VMU::whitelistPartner: Zero Address");
         require(
-            _limits.fee <= _MAX_BASIS_POINTS,
+            _fee <= _MAX_BASIS_POINTS,
             "VMU::whitelistPartner: Invalid Fee"
         );
-        emit WhitelistPartner(
-            _partner,
-            _limits.mintLimit,
-            _limits.burnLimit,
-            _limits.fee
-        );
-        partnerLimits[_partner] = _limits;
+        emit WhitelistPartner(_partner, _mintLimit, _burnLimit, _fee);
+        partnerLimits[_partner] = Limits({
+            fee: _fee,
+            mintLimit: _mintLimit,
+            burnLimit: _burnLimit
+        });
     }
 
     /*

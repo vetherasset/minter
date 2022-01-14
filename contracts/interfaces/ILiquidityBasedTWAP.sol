@@ -2,5 +2,7 @@
 pragma solidity =0.8.9;
 
 interface ILiquidityBasedTWAP {
+    function maxUpdateWindow() external view returns (uint256);
+
     function getVaderPrice() external returns (uint256);
 }
