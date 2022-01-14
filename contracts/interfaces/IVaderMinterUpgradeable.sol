@@ -2,15 +2,9 @@
 
 pragma solidity =0.8.9;
 
+import {Limits} from "../VaderMinterStorage.sol";
+
 interface IVaderMinterUpgradeable {
-    /* ========== STRUCTS ========== */
-
-    struct Limits {
-        uint256 fee;
-        uint256 mintLimit;
-        uint256 burnLimit;
-    }
-
     /* ========== FUNCTIONS ========== */
     function mint(uint256 vAmount, uint256 uAmountMinOut)
         external
@@ -23,8 +17,6 @@ interface IVaderMinterUpgradeable {
     function partnerMint(uint256 vAmount) external returns (uint256 uAmount);
 
     function partnerBurn(uint256 uAmount) external returns (uint256 vAmount);
-
-    /* ========== EVENTS ========== */
 
     event PublicMintCapChanged(
         uint256 previousPublicMintCap,

@@ -3,37 +3,20 @@
 pragma solidity =0.8.9;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "./interfaces/ILiquidityBasedTWAP.sol";
 import "./interfaces/IVaderMinterUpgradeable.sol";
 import "./interfaces/IUSDV.sol";
+import "./VaderMinterStorage.sol";
 
-contract VaderMinterUpgradeable is IVaderMinterUpgradeable, OwnableUpgradeable {
+contract VaderMinterUpgradeable is
+    VaderMinterStorage,
+    IVaderMinterUpgradeable,
+    OwnableUpgradeable
+{
     uint256 private constant _MAX_BASIS_POINTS = 10_000;
 
     // USDV Contract for Mint / Burn Operations
     /// @custom:oz-upgrades-unsafe-allow state-variable-immutable
     IUSDV public immutable usdv;
-
-    // The LBT pricing mechanism for the conversion
-    ILiquidityBasedTWAP public lbt;
-
-    // The 24 hour limits on USDV mints that are available for public minting and burning as well as the fee.
-    Limits public dailyLimits;
-
-    // The current cycle end timestamp
-    uint256 public cycleTimestamp;
-
-    // The current cycle cumulative mints
-    uint256 public cycleMints;
-
-    // The current cycle cumulative burns
-    uint256 public cycleBurns;
-
-    // The limits applied to each partner
-    mapping(address => Limits) public partnerLimits;
-
-    // Transmuter Contract
-    address public transmuter;
 
     /* ========== CONSTRUCTOR ========== */
     /// @custom:oz-upgrades-unsafe-allow constructor
