@@ -14,29 +14,15 @@ interface IVaderMinterUpgradeable {
         external
         returns (uint256 vAmount);
 
-    function partnerMint(uint256 vAmount) external returns (uint256 uAmount);
+    function partnerMint(uint256 vAmount, uint256 uAmountMinOut)
+        external
+        returns (uint256 uAmount);
 
-    function partnerBurn(uint256 uAmount) external returns (uint256 vAmount);
+    function partnerBurn(uint256 uAmount, uint256 vAmountMinOut)
+        external
+        returns (uint256 vAmount);
 
-    event PublicMintCapChanged(
-        uint256 previousPublicMintCap,
-        uint256 publicMintCap
-    );
-
-    event PublicMintFeeChanged(
-        uint256 previousPublicMintFee,
-        uint256 publicMintFee
-    );
-
-    event PartnerMintCapChanged(
-        uint256 previousPartnerMintCap,
-        uint256 partnerMintCap
-    );
-
-    event PartnerMintFeeChanged(
-        uint256 previousPartnercMintFee,
-        uint256 partnerMintFee
-    );
+    /* ========== EVENTS ========== */
 
     event DailyLimitsChanged(Limits previousLimits, Limits nextLimits);
     event WhitelistPartner(
@@ -45,4 +31,11 @@ interface IVaderMinterUpgradeable {
         uint256 burnLimit,
         uint256 fee
     );
+    event RemovePartner(address partner);
+    event SetPartnerFee(address indexed partner, uint256 fee);
+    event IncreasePartnerMintLimit(address indexed partner, uint256 mintLimit);
+    event DecreasePartnerMintLimit(address indexed partner, uint256 mintLimit);
+    event IncreasePartnerBurnLimit(address indexed partner, uint256 burnLimit);
+    event DecreasePartnerBurnLimit(address indexed partner, uint256 burnLimit);
+    event SetPartnerLockDuration(address indexed partner, uint256 lockDuration);
 }

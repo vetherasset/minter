@@ -7,6 +7,7 @@ struct Limits {
     uint256 fee;
     uint256 mintLimit;
     uint256 burnLimit;
+    uint256 lockDuration;
 }
 
 contract VaderMinterStorage {

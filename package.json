@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "lint": "solhint -f table contracts/**/*.sol"
+        "solhint": "solhint 'contracts/**/*.sol'",
+        "lint": "prettier --write contracts/*.sol contracts/**/*.sol"
     },
     "keywords": [],
     "author": "",

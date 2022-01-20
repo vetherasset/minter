@@ -21,6 +21,12 @@ npx hardhat test
 npx hardhat clean
 npx hardhat compile
 
+# lint
+npm run lint
+
+# solhint
+npm run solhint
+
 # deploy
 npx hardhat run --network kovan scripts/deploy.js
 

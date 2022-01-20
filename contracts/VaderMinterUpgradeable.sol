@@ -3,17 +3,18 @@
 pragma solidity =0.8.9;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+
 import "./interfaces/IVaderMinterUpgradeable.sol";
 import "./interfaces/IUSDV.sol";
+import "./ProtocolConstants.sol";
 import "./VaderMinterStorage.sol";
 
 contract VaderMinterUpgradeable is
     VaderMinterStorage,
     IVaderMinterUpgradeable,
+    ProtocolConstants,
     OwnableUpgradeable
 {
-    uint256 private constant _MAX_BASIS_POINTS = 10_000;
-
     // USDV Contract for Mint / Burn Operations
     /// @custom:oz-upgrades-unsafe-allow state-variable-immutable
     IUSDV public immutable usdv;
@@ -59,11 +60,6 @@ contract VaderMinterUpgradeable is
 
         uAmount = (vPrice * vAmount) / 1e18;
 
-        require(
-            uAmount >= uAmountMinOut,
-            "VMU::mint: Insufficient Trade Output"
-        );
-
         if (cycleTimestamp <= block.timestamp) {
             cycleTimestamp = block.timestamp + 24 hours;
             cycleMints = uAmount;
@@ -76,13 +72,20 @@ contract VaderMinterUpgradeable is
             "VMU::mint: 24 Hour Limit Reached"
         );
 
-        usdv.mint(
+        // Actual amount of USDV minted including fees
+        uAmount = usdv.mint(
             msg.sender,
             vAmount,
             uAmount,
             getPublicFee(),
-            lbt.maxUpdateWindow()
+            dailyLimits.lockDuration
         );
+
+        require(
+            uAmount >= uAmountMinOut,
+            "VMU::mint: Insufficient Trade Output"
+        );
+
         return uAmount;
     }
 
@@ -101,11 +104,6 @@ contract VaderMinterUpgradeable is
 
         vAmount = (1e18 * uAmount) / vPrice;
 
-        require(
-            vAmount >= vAmountMinOut,
-            "VMU::burn: Insufficient Trade Output"
-        );
-
         if (cycleTimestamp <= block.timestamp) {
             cycleTimestamp = block.timestamp + 24 hours;
             cycleBurns = uAmount;
@@ -115,16 +113,23 @@ contract VaderMinterUpgradeable is
 
         require(
             cycleBurns <= dailyLimits.burnLimit,
-            "VMU::mint: 24 Hour Limit Reached"
+            "VMU::burn: 24 Hour Limit Reached"
         );
 
-        usdv.burn(
+        // Actual amount of Vader minted including fees
+        vAmount = usdv.burn(
             msg.sender,
             uAmount,
             vAmount,
             getPublicFee(),
-            lbt.maxUpdateWindow()
+            dailyLimits.lockDuration
         );
+
+        require(
+            vAmount >= vAmountMinOut,
+            "VMU::burn: Insufficient Trade Output"
+        );
+
         return vAmount;
     }
 
@@ -133,12 +138,16 @@ contract VaderMinterUpgradeable is
     /*
      * @dev Partner mint function that receives Vader and mints USDV.
      * @param vAmount Vader amount to burn.
+     * @param uAmountMinOut USDV minimum amount to get back from the mint.
      * @returns uAmount in USDV, represents the USDV amount received from the mint.
      *
      * Requirements:
      * - Can only be called by whitelisted partners.
      **/
-    function partnerMint(uint256 vAmount) external returns (uint256 uAmount) {
+    function partnerMint(uint256 vAmount, uint256 uAmountMinOut)
+        external
+        returns (uint256 uAmount)
+    {
         require(
             partnerLimits[msg.sender].mintLimit != 0,
             "VMU::partnerMint: Not Whitelisted"
@@ -158,25 +167,35 @@ contract VaderMinterUpgradeable is
             _partnerLimits.mintLimit -= uAmount;
         }
 
-        usdv.mint(
+        uAmount = usdv.mint(
             msg.sender,
             vAmount,
             uAmount,
             _partnerLimits.fee,
-            lbt.maxUpdateWindow()
+            _partnerLimits.lockDuration
         );
+
+        require(
+            uAmount >= uAmountMinOut,
+            "VMU::partnerMint: Insufficient Trade Output"
+        );
+
         return uAmount;
     }
 
     /*
      * @dev Partner burn function that receives USDV and mints Vader.
      * @param uAmount USDV amount to burn.
+     * @param vAmountMinOut Vader minimum amount to get back from the burn.
      * @returns vAmount in Vader, represents the Vader amount received from the mint.
      *
      * Requirements:
      * - Can only be called by whitelisted partners.
      **/
-    function partnerBurn(uint256 uAmount) external returns (uint256 vAmount) {
+    function partnerBurn(uint256 uAmount, uint256 vAmountMinOut)
+        external
+        returns (uint256 vAmount)
+    {
         require(
             partnerLimits[msg.sender].burnLimit != 0,
             "VMU::partnerBurn: Not Whitelisted"
@@ -196,13 +215,19 @@ contract VaderMinterUpgradeable is
             _partnerLimits.burnLimit -= vAmount;
         }
 
-        usdv.burn(
+        vAmount = usdv.burn(
             msg.sender,
             uAmount,
             vAmount,
             _partnerLimits.fee,
-            lbt.maxUpdateWindow()
+            _partnerLimits.lockDuration
         );
+
+        require(
+            vAmount >= vAmountMinOut,
+            "VMU::partnerBurn: Insufficient Trade Output"
+        );
+
         return vAmount;
     }
 
@@ -214,18 +239,25 @@ contract VaderMinterUpgradeable is
      * - Param {_fee} fee can not be bigger than _MAX_BASIS_POINTS.
      * - Param {_mintLimit} mint limit can be 0.
      * - Param {_burnLimit} burn limit can be 0.
+     * - Param {_lockDuration} lock duration can be 0.
      **/
     function setDailyLimits(
         uint256 _fee,
         uint256 _mintLimit,
-        uint256 _burnLimit
+        uint256 _burnLimit,
+        uint256 _lockDuration
     ) external onlyOwner {
         require(_fee <= _MAX_BASIS_POINTS, "VMU::setDailyLimits: Invalid Fee");
+        require(
+            _lockDuration <= _MAX_LOCK_DURATION,
+            "VMU::setDailyLimits: Invalid lock duration"
+        );
 
         Limits memory _dailyLimits = Limits({
             fee: _fee,
             mintLimit: _mintLimit,
-            burnLimit: _burnLimit
+            burnLimit: _burnLimit,
+            lockDuration: _lockDuration
         });
 
         emit DailyLimitsChanged(dailyLimits, _dailyLimits);
@@ -242,24 +274,148 @@ contract VaderMinterUpgradeable is
      * - Param {_fee} fee can not be bigger than _MAX_BASIS_POINTS.
      * - Param {_mintLimit} mint limits can be 0.
      * - Param {_burnLimit} burn limits can be 0.
+     * - Param {_lockDuration} lock duration can be 0.
      **/
     function whitelistPartner(
         address _partner,
         uint256 _fee,
         uint256 _mintLimit,
-        uint256 _burnLimit
+        uint256 _burnLimit,
+        uint256 _lockDuration
     ) external onlyOwner {
         require(_partner != address(0), "VMU::whitelistPartner: Zero Address");
         require(
             _fee <= _MAX_BASIS_POINTS,
             "VMU::whitelistPartner: Invalid Fee"
         );
+        require(
+            _lockDuration <= _MAX_LOCK_DURATION,
+            "VMU::whitelistPartner: Invalid lock duration"
+        );
+
         emit WhitelistPartner(_partner, _mintLimit, _burnLimit, _fee);
         partnerLimits[_partner] = Limits({
             fee: _fee,
             mintLimit: _mintLimit,
-            burnLimit: _burnLimit
+            burnLimit: _burnLimit,
+            lockDuration: _lockDuration
         });
+    }
+
+    /*
+     * @dev Remove partner
+     * @param _partner Address of partner.
+     *
+     * Requirements:
+     * - Only existing owner can call this function.
+     **/
+    function removePartner(address _partner) external onlyOwner {
+        delete partnerLimits[_partner];
+        emit RemovePartner(_partner);
+    }
+
+    /*
+     * @dev Set partner fee
+     * @param _partner Address of partner.
+     * @param _fee New fee.
+     *
+     * Requirements:
+     * - Only existing owner can call this function.
+     * - Param {_fee} fee can not be bigger than _MAX_BASIS_POINTS.
+     **/
+    function setPartnerFee(address _partner, uint256 _fee) external onlyOwner {
+        require(_fee <= _MAX_BASIS_POINTS, "VMU::setPartnerFee: Invalid Fee");
+        partnerLimits[_partner].fee = _fee;
+        emit SetPartnerFee(_partner, _fee);
+    }
+
+    /*
+     * @dev Increase partner mint limit.
+     * @param _partner Address of partner.
+     * @param _amount Amount to increase the mint limit by.
+     *
+     * Requirements:
+     * - Only existing owner can call this function.
+     **/
+    function increasePartnerMintLimit(address _partner, uint256 _amount)
+        external
+        onlyOwner
+    {
+        Limits storage limits = partnerLimits[_partner];
+        limits.mintLimit += _amount;
+        emit IncreasePartnerMintLimit(_partner, limits.mintLimit);
+    }
+
+    /*
+     * @dev Decrease partner mint limit.
+     * @param _partner Address of partner.
+     * @param _amount Amount to decrease the mint limit by.
+     *
+     * Requirements:
+     * - Only existing owner can call this function.
+     **/
+    function decreasePartnerMintLimit(address _partner, uint256 _amount)
+        external
+        onlyOwner
+    {
+        Limits storage limits = partnerLimits[_partner];
+        limits.mintLimit -= _amount;
+        emit DecreasePartnerMintLimit(_partner, limits.mintLimit);
+    }
+
+    /*
+     * @dev Increase partner mint limit.
+     * @param _partner Address of partner.
+     * @param _amount Amount to increase the burn limit by.
+     *
+     * Requirements:
+     * - Only existing owner can call this function.
+     **/
+    function increasePartnerBurnLimit(address _partner, uint256 _amount)
+        external
+        onlyOwner
+    {
+        Limits storage limits = partnerLimits[_partner];
+        limits.burnLimit += _amount;
+        emit IncreasePartnerBurnLimit(_partner, limits.burnLimit);
+    }
+
+    /*
+     * @dev Decrease partner mint limit.
+     * @param _partner Address of partner.
+     * @param _amount Amount to decrease the burn limit by.
+     *
+     * Requirements:
+     * - Only existing owner can call this function.
+     **/
+    function decreasePartnerBurnLimit(address _partner, uint256 _amount)
+        external
+        onlyOwner
+    {
+        Limits storage limits = partnerLimits[_partner];
+        limits.burnLimit -= _amount;
+        emit DecreasePartnerBurnLimit(_partner, limits.burnLimit);
+    }
+
+    /*
+     * @dev Set partner lock duration.
+     * @param _partner Address of partner.
+     * @param _lockDuration New lock duration
+     *
+     * Requirements:
+     * - Only existing owner can call this function.
+     * - Param {_lockDuration} cannot be bigger than _MAX_LOCK_DURATION
+     **/
+    function setPartnerLockDuration(address _partner, uint256 _lockDuration)
+        external
+        onlyOwner
+    {
+        require(
+            _lockDuration <= _MAX_LOCK_DURATION,
+            "VMU::setPartnerLockDuration: Invalid lock duration"
+        );
+        partnerLimits[_partner].lockDuration = _lockDuration;
+        emit SetPartnerLockDuration(_partner, _lockDuration);
     }
 
     /*
