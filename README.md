@@ -31,10 +31,10 @@ npm run solhint
 npx hardhat run --network kovan scripts/deploy.js
 
 # verify
-IMP=0x5627F11c780c291F3e5739f76777B898570e2326
-USDV=0x0de905dfb036521f5A45Da90B2D9e8a74a9CE42E
+IMP=0xA8a839CcFAA8671D36ECb25Fc5600c1eA5859Beb
+USDV=0xF5783253A21E5E740908CEdB800183b70A004479
 
-npx hardhat verify --network kovan $IMP "$USDV"
+npx hardhat verify --network kovan $IMP $USDV
 
 # flatten
 npx hardhat flatten contracts/VaderMinterUpgradeable.sol > tmp/flat.sol
@@ -47,5 +47,5 @@ npx hardhat flatten contracts/VaderMinterUpgradeable.sol > tmp/flat.sol
 
 ### Kovan
 
--   ProxyAdmin 0x3ddBc954EF60b31f1299F462e72d9B4bF5A4328f
--   Proxy 0x17c7309d59514A18Fa623fb0371256a976E5DCE7
+-   ProxyAdmin 0xed7D9E050121d386CCe2e8D9F239f0259482B242
+-   Proxy 0xBeF6975EdB6485965e49eaad5505aFD6b11b5958
