@@ -42,8 +42,8 @@ npx hardhat flatten contracts/VaderMinterUpgradeable.sol > tmp/flat.sol
 
 ### Mainnet
 
--   ProxyAdmin
--   Proxy
+-   ProxyAdmin 0x50ba0E4514509435e26bB68924f3dCB9CD36E32d
+-   Proxy 0x00aadC47d91fD9CaC3369E6045042f9F99216B98
 
 ### Kovan
 
