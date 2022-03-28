@@ -4,10 +4,10 @@ pragma solidity =0.8.9;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-import "./ProtocolConstants.sol";
-import "./interfaces/IVaderMinterUpgradeable.sol";
-import "./interfaces/IUSDV.sol";
-import "./VaderMinterStorage.sol";
+import "../ProtocolConstants.sol";
+import "../interfaces/IVaderMinterUpgradeable.sol";
+import "../interfaces/IUSDV.sol";
+import "../VaderMinterStorage.sol";
 
 contract VaderMinterUpgradeable is
     VaderMinterStorage,
