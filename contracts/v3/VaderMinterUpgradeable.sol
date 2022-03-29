@@ -46,12 +46,12 @@ contract VaderMinterUpgradeable is
 
     /* ========== MUTATIVE FUNCTIONS ========== */
 
-    /*
+    /**
      * @dev Public mint function that receives Vader and mints USDV.
      * @param vAmount Vader amount to burn.
      * @param uAmountMinOut USDV minimum amount to get back from the mint.
-     * @returns uAmount in USDV, represents the USDV amount received from the mint.
-     **/
+     * @return uAmount in USDV, represents the USDV amount received from the mint.
+     */
     function mint(uint256 vAmount, uint256 uAmountMinOut)
         external
         returns (uint256 uAmount)
@@ -90,13 +90,13 @@ contract VaderMinterUpgradeable is
         return uAmount;
     }
 
-    /*
+    /**
      * @dev Public burn function that receives USDV and mints Vader.
      * @param uAmount USDV amount to burn.
      * @param vAmountMinOut Vader minimum amount to get back from the burn.
-     * @returns vAmount in Vader, represents the Vader amount received from the burn.
+     * @return vAmount in Vader, represents the Vader amount received from the burn.
      *
-     **/
+     */
     function burn(uint256 uAmount, uint256 vAmountMinOut)
         external
         returns (uint256 vAmount)
@@ -135,9 +135,9 @@ contract VaderMinterUpgradeable is
         return vAmount;
     }
 
-    /*
+    /**
      * @notice Public destroy function that burns USDV without minting Vader. Use with caution!
-     * @param vAmount USDV amount to burn permanently.
+     * @param uAmount USDV amount to burn permanently.
      */
     function unsafeDestroyUsdv(uint256 uAmount) external {
         require(uAmount > 0, "VMU::unsafeDestroyUsdv: Zero Input");
@@ -153,7 +153,7 @@ contract VaderMinterUpgradeable is
         usdv.burn(msg.sender, uAmount, 1, _MAX_BASIS_POINTS, 0);
     }
 
-    /*
+    /**
      * @notice Public destroy function that burns Vader without minting USDV. Use with caution!
      * @param vAmount Vader amount to destroy permanently.
      */
@@ -173,15 +173,15 @@ contract VaderMinterUpgradeable is
 
     /* ========== RESTRICTED FUNCTIONS ========== */
 
-    /*
+    /**
      * @dev Partner mint function that receives Vader and mints USDV.
      * @param vAmount Vader amount to burn.
      * @param uAmountMinOut USDV minimum amount to get back from the mint.
-     * @returns uAmount in USDV, represents the USDV amount received from the mint.
+     * @return uAmount in USDV, represents the USDV amount received from the mint.
      *
      * Requirements:
      * - Can only be called by whitelisted partners.
-     **/
+     */
     function partnerMint(uint256 vAmount, uint256 uAmountMinOut)
         external
         returns (uint256 uAmount)
@@ -221,15 +221,15 @@ contract VaderMinterUpgradeable is
         return uAmount;
     }
 
-    /*
+    /**
      * @dev Partner burn function that receives USDV and mints Vader.
      * @param uAmount USDV amount to burn.
      * @param vAmountMinOut Vader minimum amount to get back from the burn.
-     * @returns vAmount in Vader, represents the Vader amount received from the mint.
+     * @return vAmount in Vader, represents the Vader amount received from the mint.
      *
      * Requirements:
      * - Can only be called by whitelisted partners.
-     **/
+     */
     function partnerBurn(uint256 uAmount, uint256 vAmountMinOut)
         external
         returns (uint256 vAmount)
@@ -269,7 +269,7 @@ contract VaderMinterUpgradeable is
         return vAmount;
     }
 
-    /*
+    /**
      * @dev Sets the daily limits for public mints represented by the param {_dailyMintLimit}.
      *
      * Requirements:
@@ -278,7 +278,7 @@ contract VaderMinterUpgradeable is
      * - Param {_mintLimit} mint limit can be 0.
      * - Param {_burnLimit} burn limit can be 0.
      * - Param {_lockDuration} lock duration can be 0.
-     **/
+     */
     function setDailyLimits(
         uint256 _fee,
         uint256 _mintLimit,
@@ -302,7 +302,7 @@ contract VaderMinterUpgradeable is
         dailyLimits = _dailyLimits;
     }
 
-    /*
+    /**
      * @dev Sets the a partner address {_partner }  to a given limit {_limits} that represents the ability
      * to mint USDV from the reserve partners minting allocation.
      *
@@ -313,7 +313,7 @@ contract VaderMinterUpgradeable is
      * - Param {_mintLimit} mint limits can be 0.
      * - Param {_burnLimit} burn limits can be 0.
      * - Param {_lockDuration} lock duration can be 0.
-     **/
+     */
     function whitelistPartner(
         address _partner,
         uint256 _fee,
@@ -340,19 +340,19 @@ contract VaderMinterUpgradeable is
         });
     }
 
-    /*
+    /**
      * @dev Remove partner
      * @param _partner Address of partner.
      *
      * Requirements:
      * - Only existing owner can call this function.
-     **/
+     */
     function removePartner(address _partner) external onlyOwner {
         delete partnerLimits[_partner];
         emit RemovePartner(_partner);
     }
 
-    /*
+    /**
      * @dev Set partner fee
      * @param _partner Address of partner.
      * @param _fee New fee.
@@ -360,21 +360,21 @@ contract VaderMinterUpgradeable is
      * Requirements:
      * - Only existing owner can call this function.
      * - Param {_fee} fee can not be bigger than _MAX_BASIS_POINTS.
-     **/
+     */
     function setPartnerFee(address _partner, uint256 _fee) external onlyOwner {
         require(_fee <= _MAX_BASIS_POINTS, "VMU::setPartnerFee: Invalid Fee");
         partnerLimits[_partner].fee = _fee;
         emit SetPartnerFee(_partner, _fee);
     }
 
-    /*
+    /**
      * @dev Increase partner mint limit.
      * @param _partner Address of partner.
      * @param _amount Amount to increase the mint limit by.
      *
      * Requirements:
      * - Only existing owner can call this function.
-     **/
+     */
     function increasePartnerMintLimit(address _partner, uint256 _amount)
         external
         onlyOwner
@@ -384,14 +384,14 @@ contract VaderMinterUpgradeable is
         emit IncreasePartnerMintLimit(_partner, limits.mintLimit);
     }
 
-    /*
+    /**
      * @dev Decrease partner mint limit.
      * @param _partner Address of partner.
      * @param _amount Amount to decrease the mint limit by.
      *
      * Requirements:
      * - Only existing owner can call this function.
-     **/
+     */
     function decreasePartnerMintLimit(address _partner, uint256 _amount)
         external
         onlyOwner
@@ -401,14 +401,14 @@ contract VaderMinterUpgradeable is
         emit DecreasePartnerMintLimit(_partner, limits.mintLimit);
     }
 
-    /*
+    /**
      * @dev Increase partner mint limit.
      * @param _partner Address of partner.
      * @param _amount Amount to increase the burn limit by.
      *
      * Requirements:
      * - Only existing owner can call this function.
-     **/
+     */
     function increasePartnerBurnLimit(address _partner, uint256 _amount)
         external
         onlyOwner
@@ -418,14 +418,14 @@ contract VaderMinterUpgradeable is
         emit IncreasePartnerBurnLimit(_partner, limits.burnLimit);
     }
 
-    /*
+    /**
      * @dev Decrease partner mint limit.
      * @param _partner Address of partner.
      * @param _amount Amount to decrease the burn limit by.
      *
      * Requirements:
      * - Only existing owner can call this function.
-     **/
+     */
     function decreasePartnerBurnLimit(address _partner, uint256 _amount)
         external
         onlyOwner
@@ -435,7 +435,7 @@ contract VaderMinterUpgradeable is
         emit DecreasePartnerBurnLimit(_partner, limits.burnLimit);
     }
 
-    /*
+    /**
      * @dev Set partner lock duration.
      * @param _partner Address of partner.
      * @param _lockDuration New lock duration
@@ -443,7 +443,7 @@ contract VaderMinterUpgradeable is
      * Requirements:
      * - Only existing owner can call this function.
      * - Param {_lockDuration} cannot be bigger than _MAX_LOCK_DURATION
-     **/
+     */
     function setPartnerLockDuration(address _partner, uint256 _lockDuration)
         external
         onlyOwner
@@ -456,13 +456,13 @@ contract VaderMinterUpgradeable is
         emit SetPartnerLockDuration(_partner, _lockDuration);
     }
 
-    /*
+    /**
      * @dev Sets the transmuter contract address represented by the param {_transmuter}.
      *
      * Requirements:
      * - Only existing owner can call this function.
      * - Param {_transmuter} can not be address ZERO.
-     **/
+     */
     function setTransmuterAddress(address _transmuter) external onlyOwner {
         require(
             _transmuter != address(0),
@@ -471,13 +471,13 @@ contract VaderMinterUpgradeable is
         transmuter = _transmuter;
     }
 
-    /*
+    /**
      * @dev Sets the lbt contract address represented by the param {_lbt}.
      *
      * Requirements:
      * - Only existing owner can call this function.
      * - Param {_lbt} can not be address ZERO.
-     **/
+     */
     function setLBT(ILiquidityBasedTWAP _lbt) external onlyOwner {
         require(
             _lbt != ILiquidityBasedTWAP(address(0)),
