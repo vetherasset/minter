@@ -150,7 +150,7 @@ describe("V3", () => {
         expect(totalVaderAfter).to.eq(totalVaderBefore.add(1)) // 1 wei was minted for owner since uAmount cannot be 0
     })
 
-    it.only("unsafeDestroyVader() destroys Vader", async () => {
+    it("unsafeDestroyVader() destroys Vader", async () => {
         // fund user with usdv
         let tx = await vader
             .connect(vaderWhale)

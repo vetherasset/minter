@@ -17,8 +17,7 @@ typechain
 #Hardhat files
 cache
 artifacts
-.openzeppelin/*.json
-!.openzeppelin/mainnet.json
+.openzeppelin/unknown-*.json
 secret*
 !secrets.sample.json
 tmp
