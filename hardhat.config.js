@@ -17,11 +17,16 @@ module.exports = {
     networks: {
         kovan: {
             url: `https://eth-kovan.alchemyapi.io/v2/${alchemyApiKey}`,
-            accounts: { mnemonic: mnemonic },
+            accounts: { mnemonic },
         },
         mainnet: {
             url: `https://eth-mainnet.alchemyapi.io/v2/${alchemyApiKey}`,
-            accounts: { mnemonic: mnemonic },
+            accounts: { mnemonic },
+        },
+        hardhat: {
+            forking: {
+                url: `https://eth-mainnet.alchemyapi.io/v2/${alchemyApiKey}`,
+            },
         },
     },
     etherscan: {

@@ -2,7 +2,9 @@
 
 pragma solidity =0.8.9;
 
-interface IUSDV {
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
+interface IUSDV is IERC20 {
     /* ========== ENUMS ========== */
 
     enum LockTypes {

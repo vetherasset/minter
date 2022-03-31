@@ -1,5 +1,5 @@
 const chai = require("chai")
-chai.use(require("chai-as-promised"))
+chai.use(require("ethereum-waffle").solidity)
 const { expect } = chai
 
 module.exports = {
