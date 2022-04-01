@@ -22,7 +22,7 @@ async function main() {
         constructorArgs: [usdv],
     })
 
-    console.log(`Upgrade done!')
+    console.log("Upgrade done!")
 }
 
 main()
