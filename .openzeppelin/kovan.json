@@ -10,7 +10,7 @@
     }
   ],
   "impls": {
-    "c20e7f47f1639c508008c0e8187f58873410ce9124a99c032da0cea4dcaf7df2": {
+    "9e157ef8a155779886ff2e014fb79f2f305db74f4cd021b9c25bcdec89c32f37": {
       "address": "0x19ad9416b8e19D26A5bAD12d5B3544ebccD27723",
       "layout": {
         "storage": [
@@ -18,7 +18,7 @@
             "label": "lbt",
             "offset": 0,
             "slot": "0",
-            "type": "t_contract(ILiquidityBasedTWAP)677",
+            "type": "t_contract(ILiquidityBasedTWAP)3345",
             "contract": "VaderMinterStorage",
             "src": "contracts/VaderMinterStorage.sol:15"
           },
@@ -26,7 +26,7 @@
             "label": "dailyLimits",
             "offset": 0,
             "slot": "1",
-            "type": "t_struct(Limits)644_storage",
+            "type": "t_struct(Limits)2462_storage",
             "contract": "VaderMinterStorage",
             "src": "contracts/VaderMinterStorage.sol:18"
           },
@@ -58,7 +58,7 @@
             "label": "partnerLimits",
             "offset": 0,
             "slot": "8",
-            "type": "t_mapping(t_address,t_struct(Limits)644_storage)",
+            "type": "t_mapping(t_address,t_struct(Limits)2462_storage)",
             "contract": "VaderMinterStorage",
             "src": "contracts/VaderMinterStorage.sol:30"
           },
@@ -128,15 +128,179 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(ILiquidityBasedTWAP)677": {
+          "t_contract(ILiquidityBasedTWAP)3345": {
             "label": "contract ILiquidityBasedTWAP",
             "numberOfBytes": "20"
           },
-          "t_mapping(t_address,t_struct(Limits)644_storage)": {
+          "t_mapping(t_address,t_struct(Limits)2462_storage)": {
             "label": "mapping(address => struct Limits)",
             "numberOfBytes": "32"
           },
-          "t_struct(Limits)644_storage": {
+          "t_struct(Limits)2462_storage": {
+            "label": "struct Limits",
+            "members": [
+              {
+                "label": "fee",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "mintLimit",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "burnLimit",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "lockDuration",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    },
+    "c20e7f47f1639c508008c0e8187f58873410ce9124a99c032da0cea4dcaf7df2": {
+      "address": "0xE7b9C7c4642855002ccF192a09987a56309c76d1",
+      "txHash": "0x2f8a99399342171851b9130e04ef45f4beaeb6e176cbd919b885188078b3d256",
+      "layout": {
+        "storage": [
+          {
+            "label": "lbt",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_contract(ILiquidityBasedTWAP)3345",
+            "contract": "VaderMinterStorage",
+            "src": "contracts/VaderMinterStorage.sol:15"
+          },
+          {
+            "label": "dailyLimits",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_struct(Limits)2462_storage",
+            "contract": "VaderMinterStorage",
+            "src": "contracts/VaderMinterStorage.sol:18"
+          },
+          {
+            "label": "cycleTimestamp",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256",
+            "contract": "VaderMinterStorage",
+            "src": "contracts/VaderMinterStorage.sol:21"
+          },
+          {
+            "label": "cycleMints",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_uint256",
+            "contract": "VaderMinterStorage",
+            "src": "contracts/VaderMinterStorage.sol:24"
+          },
+          {
+            "label": "cycleBurns",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_uint256",
+            "contract": "VaderMinterStorage",
+            "src": "contracts/VaderMinterStorage.sol:27"
+          },
+          {
+            "label": "partnerLimits",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_struct(Limits)2462_storage)",
+            "contract": "VaderMinterStorage",
+            "src": "contracts/VaderMinterStorage.sol:30"
+          },
+          {
+            "label": "transmuter",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_address",
+            "contract": "VaderMinterStorage",
+            "src": "contracts/VaderMinterStorage.sol:33"
+          },
+          {
+            "label": "_initialized",
+            "offset": 20,
+            "slot": "9",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 21,
+            "slot": "9",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "60",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "61",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(ILiquidityBasedTWAP)3345": {
+            "label": "contract ILiquidityBasedTWAP",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_struct(Limits)2462_storage)": {
+            "label": "mapping(address => struct Limits)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Limits)2462_storage": {
             "label": "struct Limits",
             "members": [
               {

@@ -34,10 +34,12 @@ describe("V3", () => {
         vader = await ethers.getContractAt("ERC20", VADER.mainnet)
 
         // import v2
-        minter = await ethers.getContractAt(
-            "contracts/v2/VaderMinterUpgradeable.sol:VaderMinterUpgradeable",
-            PROXY.mainnet
+        const VaderMinterV2 = await ethers.getContractFactory(
+            "VaderMinterUpgradeable"
         )
+        minter = await upgrades.forceImport(PROXY.mainnet, VaderMinterV2, {
+            constructorArgs: [usdv.address],
+        })
 
         // impersonate owner of VaderMinter (who is also owner of ProxyAdmin)
         ownerAddress = await minter.owner()
@@ -47,7 +49,7 @@ describe("V3", () => {
 
         // upgrade to v3
         const VaderMinterV3 = await ethers.getContractFactory(
-            "contracts/v3/VaderMinterUpgradeable.sol:VaderMinterUpgradeable"
+            "VaderMinterUpgradeableV3"
         )
 
         // // short way (needs the ProxyAdmin owner to be account[0])
@@ -73,7 +75,7 @@ describe("V3", () => {
         await tx.wait()
 
         minter = await ethers.getContractAt(
-            "contracts/v3/VaderMinterUpgradeable.sol:VaderMinterUpgradeable",
+            "VaderMinterUpgradeableV3",
             PROXY.mainnet
         )
 

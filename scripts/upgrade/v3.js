@@ -15,14 +15,14 @@ async function main() {
     console.log(`USDV: ${usdv}`)
 
     const VaderMinterV3 = await ethers.getContractFactory(
-        "contracts/v3/VaderMinterUpgradeable.sol:VaderMinterUpgradeable"
+        "VaderMinterUpgradeableV3"
     )
 
     await upgrades.upgradeProxy(proxy, VaderMinterV3, {
         constructorArgs: [usdv],
     })
 
-    console.log(`Upgrade done: ${proxy}`)
+    console.log(`Upgrade done!')
 }
 
 main()
