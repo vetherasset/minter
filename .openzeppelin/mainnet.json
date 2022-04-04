@@ -173,6 +173,130 @@
           }
         }
       }
+    },
+    "91f3b5c55761ea57a0c239170a94c9e85feb1a26a44258f6b3ee25a3e8a929d2": {
+      "address": "0x201480bdB1d4308d0DB8D9CfCcc1848Ff65Aa343",
+      "txHash": "0x8787afdfd787729b44b7758c0caaf0610ccc784a04a0d46c26231728b65b1f11",
+      "layout": {
+        "storage": [
+          {
+            "contract": "VaderMinterStorage",
+            "label": "lbt",
+            "type": "t_contract(ILiquidityBasedTWAP)3351",
+            "src": "contracts/VaderMinterStorage.sol:15"
+          },
+          {
+            "contract": "VaderMinterStorage",
+            "label": "dailyLimits",
+            "type": "t_struct(Limits)2468_storage",
+            "src": "contracts/VaderMinterStorage.sol:18"
+          },
+          {
+            "contract": "VaderMinterStorage",
+            "label": "cycleTimestamp",
+            "type": "t_uint256",
+            "src": "contracts/VaderMinterStorage.sol:21"
+          },
+          {
+            "contract": "VaderMinterStorage",
+            "label": "cycleMints",
+            "type": "t_uint256",
+            "src": "contracts/VaderMinterStorage.sol:24"
+          },
+          {
+            "contract": "VaderMinterStorage",
+            "label": "cycleBurns",
+            "type": "t_uint256",
+            "src": "contracts/VaderMinterStorage.sol:27"
+          },
+          {
+            "contract": "VaderMinterStorage",
+            "label": "partnerLimits",
+            "type": "t_mapping(t_address,t_struct(Limits)2468_storage)",
+            "src": "contracts/VaderMinterStorage.sol:30"
+          },
+          {
+            "contract": "VaderMinterStorage",
+            "label": "transmuter",
+            "type": "t_address",
+            "src": "contracts/VaderMinterStorage.sol:33"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:39"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:44"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:31"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:82"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_contract(ILiquidityBasedTWAP)3351": {
+            "label": "contract ILiquidityBasedTWAP"
+          },
+          "t_struct(Limits)2468_storage": {
+            "label": "struct Limits",
+            "members": [
+              {
+                "label": "fee",
+                "type": "t_uint256"
+              },
+              {
+                "label": "mintLimit",
+                "type": "t_uint256"
+              },
+              {
+                "label": "burnLimit",
+                "type": "t_uint256"
+              },
+              {
+                "label": "lockDuration",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_mapping(t_address,t_struct(Limits)2468_storage)": {
+            "label": "mapping(address => struct Limits)"
+          }
+        }
+      }
     }
   }
 }
